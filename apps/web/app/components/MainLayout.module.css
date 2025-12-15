@@ -1,0 +1,27 @@
+.container {
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: var(--background);
+}
+
+.wrapper {
+  display: flex;
+  width: 100%;
+  max-width: 1265px;
+}
+
+.main {
+  flex: 1;
+  border-left: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  min-height: 100vh;
+  max-width: 600px;
+}
+
+@media (max-width: 700px) {
+  .main {
+    max-width: 100%;
+    border-right: none;
+  }
+}

@@ -1,0 +1,202 @@
+.container {
+  display: flex;
+  min-height: 100vh;
+  background-color: black;
+  color: white;
+}
+
+.leftSection {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: url('https://abs.twimg.com/sticky/illustrations/lohp_en_1302x955.png');
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.bigLogo {
+  width: 300px;
+  height: 300px;
+  fill: white;
+  z-index: 10;
+}
+
+.rightSection {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 36px;
+  min-width: 45vw;
+}
+
+.contentWrapper {
+  max-width: 760px;
+  width: 100%;
+  padding: 20px;
+}
+
+.mobileLogo {
+  width: 45px;
+  height: 45px;
+  fill: white;
+  margin-bottom: 48px;
+  display: none;
+}
+
+.title {
+  font-size: 64px;
+  font-weight: 900;
+  margin-bottom: 48px;
+  letter-spacing: -1.2px;
+  font-family: 'TwitterChirp', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.subtitle {
+  font-size: 31px;
+  font-weight: 900;
+  margin-bottom: 32px;
+}
+
+.authButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 300px;
+}
+
+.googleButton, .appleButton, .createAccountButton, .loginButton {
+  height: 40px;
+  border-radius: 20px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background-color 0.2s;
+}
+
+.googleButton {
+  background-color: white;
+  color: black;
+}
+
+.googleButton:hover {
+  background-color: #e6e6e6;
+}
+
+.appleButton {
+  background-color: white;
+  color: black;
+  font-weight: 700;
+}
+
+.appleButton:hover {
+  background-color: #e6e6e6;
+}
+
+.buttonIcon {
+  width: 20px;
+  height: 20px;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  margin: 4px 0;
+  color: white;
+}
+
+.line {
+  flex: 1;
+  height: 1px;
+  background-color: #2f3336;
+}
+
+.divider span {
+  padding: 0 8px;
+  font-size: 15px;
+}
+
+.createAccountButton {
+  background-color: #1d9bf0;
+  color: white;
+}
+
+.createAccountButton:hover {
+  background-color: #1a8cd8;
+}
+
+.terms {
+  font-size: 11px;
+  color: #71767b;
+  margin-top: 8px;
+  line-height: 14px;
+}
+
+.terms a {
+  color: #1d9bf0;
+}
+
+.terms a:hover {
+  text-decoration: underline;
+}
+
+.loginSection {
+  margin-top: 60px;
+  width: 300px;
+}
+
+.loginSection h3 {
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.loginButton {
+  background-color: black;
+  color: #1d9bf0;
+  border: 1px solid #536471;
+  width: 100%;
+}
+
+.loginButton:hover {
+  background-color: rgba(29, 155, 240, 0.1);
+}
+
+@media (max-width: 1000px) {
+  .container {
+    flex-direction: column;
+  }
+  
+  .leftSection {
+    display: none;
+  }
+  
+  .rightSection {
+    min-width: 100%;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  .contentWrapper {
+    max-width: 100%;
+  }
+  
+  .mobileLogo {
+    display: block;
+  }
+  
+  .title {
+    font-size: 40px;
+    margin-bottom: 30px;
+  }
+  
+  .subtitle {
+    font-size: 23px;
+  }
+}

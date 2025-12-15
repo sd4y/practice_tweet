@@ -1,0 +1,201 @@
+.container {
+  width: 350px;
+  padding-left: 30px;
+  padding-top: 12px;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.searchContainer {
+  position: sticky;
+  top: 0;
+  background-color: var(--background);
+  padding-bottom: 8px;
+  z-index: 10;
+}
+
+.searchBar {
+  background-color: var(--gray-extra-light);
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  gap: 12px;
+}
+
+.searchBar:focus-within {
+  background-color: var(--background);
+  border: 1px solid var(--primary);
+}
+
+.searchIcon {
+  color: var(--gray);
+}
+
+.searchInput {
+  border: none;
+  background: none;
+  outline: none;
+  font-size: 15px;
+  width: 100%;
+  color: var(--foreground);
+}
+
+.premiumCard {
+  background-color: var(--gray-extra-light);
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.premiumTitle {
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.premiumText {
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: 500;
+}
+
+.premiumButton {
+  background-color: var(--foreground);
+  color: var(--background);
+  border-radius: 9999px;
+  padding: 8px 16px;
+  font-weight: 700;
+  font-size: 15px;
+  width: fit-content;
+  margin-top: 4px;
+}
+
+.card {
+  background-color: var(--gray-extra-light);
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--gray-extra-light);
+}
+
+.cardTitle {
+  font-size: 20px;
+  font-weight: 800;
+  padding: 12px 16px;
+}
+
+.trendItem {
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.trendItem:hover {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+.trendInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.trendMeta {
+  font-size: 13px;
+  color: var(--gray);
+}
+
+.trendName {
+  font-size: 15px;
+  font-weight: 700;
+  padding: 2px 0;
+}
+
+.trendCount {
+  font-size: 13px;
+  color: var(--gray);
+}
+
+.moreButton {
+  color: var(--gray);
+  padding: 8px;
+  border-radius: 50%;
+}
+
+.moreButton:hover {
+  background-color: rgba(29, 155, 240, 0.1);
+  color: var(--primary);
+}
+
+.showMore {
+  padding: 16px;
+  color: var(--primary);
+  font-size: 15px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.showMore:hover {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+.followItem {
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.followItem:hover {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--gray-light);
+}
+
+.followInfo {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.followName {
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.followHandle {
+  color: var(--gray);
+  font-size: 13px;
+}
+
+.followButton {
+  background-color: var(--foreground);
+  color: var(--background);
+  padding: 6px 16px;
+  border-radius: 9999px;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+@media (max-width: 1000px) {
+  .container {
+    display: none;
+  }
+}

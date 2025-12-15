@@ -1,0 +1,149 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 364px;
+  margin: 0 auto;
+}
+
+.title {
+  font-size: 31px;
+  font-weight: 700;
+  margin: 20px 0;
+  color: white;
+}
+
+.socialButton {
+  height: 40px;
+  border-radius: 20px;
+  background-color: white;
+  color: black;
+  font-weight: 700;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.socialButton:hover {
+  background-color: #e6e6e6;
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  margin: 4px 0;
+  color: white;
+}
+
+.line {
+  flex: 1;
+  height: 1px;
+  background-color: #2f3336;
+}
+
+.divider span {
+  padding: 0 8px;
+  font-size: 15px;
+}
+
+.input {
+  width: 100%;
+  height: 56px;
+  background-color: black;
+  border: 1px solid #333639;
+  border-radius: 4px;
+  padding: 8px 12px;
+  color: white;
+  font-size: 17px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.input:focus {
+  border-color: #1d9bf0;
+}
+
+.nextButton {
+  height: 46px;
+  border-radius: 24px;
+  background-color: white;
+  color: black;
+  font-weight: 700;
+  font-size: 17px;
+  margin-top: 12px;
+  cursor: pointer;
+}
+
+.forgotButton {
+  height: 36px;
+  border-radius: 18px;
+  background-color: black;
+  color: white;
+  border: 1px solid #536471;
+  font-weight: 700;
+  font-size: 15px;
+  margin-top: 12px;
+  cursor: pointer;
+}
+
+.footer {
+  color: #71767b;
+  font-size: 15px;
+  margin-top: 40px;
+}
+
+.link {
+  color: #1d9bf0;
+  cursor: pointer;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+.dobSection {
+  margin-top: 20px;
+}
+
+.dobTitle {
+  font-size: 15px;
+  font-weight: 700;
+  color: white;
+}
+
+.dobDesc {
+  font-size: 14px;
+  color: #71767b;
+  margin: 4px 0 16px;
+  line-height: 20px;
+}
+
+.dobSelects {
+  display: flex;
+  gap: 12px;
+}
+
+.select {
+  height: 56px;
+  background-color: black;
+  border: 1px solid #333639;
+  border-radius: 4px;
+  color: white;
+  font-size: 17px;
+  padding: 0 12px;
+  flex: 1;
+}
+
+.spacer {
+  flex: 1;
+}

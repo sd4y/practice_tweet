@@ -1,0 +1,123 @@
+.feed {
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  background-color: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  z-index: 10;
+}
+
+.tabs {
+  display: flex;
+  width: 100%;
+}
+
+.tab {
+  flex: 1;
+  height: 53px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  position: relative;
+  font-weight: 500;
+  color: var(--gray);
+}
+
+.tab:hover {
+  background-color: var(--hover-bg);
+}
+
+.activeTab {
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+.indicator {
+  position: absolute;
+  bottom: 0;
+  width: 56px;
+  height: 4px;
+  background-color: var(--primary);
+  border-radius: 9999px;
+}
+
+.compose {
+  display: flex;
+  padding: 16px;
+  border-bottom: 1px solid var(--border);
+  gap: 12px;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--gray-light);
+}
+
+.inputWrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.input {
+  border: none;
+  background: none;
+  outline: none;
+  font-size: 20px;
+  padding: 12px 0;
+  margin-bottom: 12px;
+  color: var(--foreground);
+}
+
+.input::placeholder {
+  color: var(--gray);
+}
+
+.composeTools {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+}
+
+.toolIcons {
+  display: flex;
+  gap: 4px;
+}
+
+.toolButton {
+  color: var(--primary);
+  padding: 8px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+}
+
+.toolButton:hover {
+  background-color: rgba(29, 155, 240, 0.1);
+}
+
+.postButton {
+  background-color: var(--primary);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 9999px;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.postButton:hover {
+  background-color: var(--primary-hover);
+}
