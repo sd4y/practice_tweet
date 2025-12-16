@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, UseGuards, Request, Param, Delete, Headers, Patch } from '@nestjs/common';
+import { Controller, Get, Post, Body, UseGuards, Request, Param, Delete, Headers, Patch, Query } from '@nestjs/common';
 import { TweetsService } from './tweets.service';
 import { AuthGuard } from '@nestjs/passport';
 import { JwtService } from '@nestjs/jwt';
@@ -32,7 +32,7 @@ export class TweetsController {
   }
 
   @Get()
-  findAll(@Headers('authorization') authHeader?: string) {
+  findAll(@Headers('authorization') authHeader?: string, @Query('authorId') authorId?: string, @Query('excludeReplies') excludeReplies?: string, @Query('following') following?: string) {
     let userId: string | undefined;
     if (authHeader) {
       try {
@@ -45,7 +45,7 @@ export class TweetsController {
         // ignore invalid tokens
       }
     }
-    return this.tweetsService.findAll(userId);
+    return this.tweetsService.findAll(userId, authorId, excludeReplies === 'true', following === 'true');
   }
 
   @Get(':id')

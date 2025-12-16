@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  output   = "../../../node_modules/@prisma/client"
   binaryTargets = ["native"]
 }
 
@@ -17,30 +18,53 @@ model User {
   bio         String?
   avatar      String?
   coverImage  String?
+  location    String?
+  website     String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   tweets    Tweet[]
   likes     Like[]
+  bookmarks Bookmark[]
   followers Follow[] @relation("follower")
   following Follow[] @relation("following")
+
+  notificationsReceived Notification[] @relation("recipient")
+  notificationsSent     Notification[] @relation("issuer")
+
+  conversations ConversationParticipant[]
+  messages      Message[]
+
+  verified Boolean @default(false)
 }
 
 model Tweet {
   id        String   @id @default(cuid())
-  content   String
+  content   String?
   image     String?
+  views     Int      @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   authorId String
   author   User   @relation(fields: [authorId], references: [id])
 
-  likes Like[]
+  likes     Like[]
+  bookmarks Bookmark[]
+  notifications Notification[]
 
+  // References
   parentId String?
   parent   Tweet?  @relation("replies", fields: [parentId], references: [id], onDelete: Cascade)
-  children Tweet[] @relation("replies")
+  replies  Tweet[] @relation("replies")
+
+  retweetId String?
+  retweetOf Tweet?  @relation("retweets", fields: [retweetId], references: [id], onDelete: Cascade)
+  retweets  Tweet[] @relation("retweets")
+
+  quoteId String?
+  quoteOf Tweet?  @relation("quotes", fields: [quoteId], references: [id], onDelete: Cascade)
+  quotes  Tweet[] @relation("quotes")
 }
 
 model Like {
@@ -67,4 +91,74 @@ model Follow {
   following   User   @relation("following", fields: [followingId], references: [id])
 
   @@unique([followerId, followingId])
+}
+
+model Bookmark {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  tweetId String
+  tweet   Tweet  @relation(fields: [tweetId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, tweetId])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  type      NotificationType
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  
+  userId    String
+  user      User     @relation("recipient", fields: [userId], references: [id])
+
+  issuerId  String
+  issuer    User     @relation("issuer", fields: [issuerId], references: [id])
+
+  tweetId   String?
+  tweet     Tweet?   @relation(fields: [tweetId], references: [id])
+}
+
+enum NotificationType {
+  LIKE
+  REPLY
+  FOLLOW
+  RETWEET
+  QUOTE
+  MENTION
+}
+
+model Conversation {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  participants ConversationParticipant[]
+  messages     Message[]
+}
+
+model ConversationParticipant {
+  id             String       @id @default(cuid())
+  userId         String
+  user           User         @relation(fields: [userId], references: [id])
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  hasSeenLatest  Boolean      @default(false)
+
+  @@unique([userId, conversationId])
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  content        String
+  createdAt      DateTime     @default(now())
+  
+  senderId       String
+  sender         User         @relation(fields: [senderId], references: [id])
+  
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
 }

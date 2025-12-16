@@ -15,10 +15,12 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+    // Check for 401 Unauthorized OR Network Error (server down/unreachable)
+    // error.response is undefined for network errors like Connection Refused
+    if (error.response?.status === 401 || !error.response) {
       localStorage.removeItem('token');
-      // Force reload to reset state if we are on client side
-      if (typeof window !== 'undefined') {
+      // Only redirect if we are not already on the landing page or login page to avoid loops
+      if (typeof window !== 'undefined' && window.location.pathname !== '/') {
          window.location.href = '/';
       }
     }

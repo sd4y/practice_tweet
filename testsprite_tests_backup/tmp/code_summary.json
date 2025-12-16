@@ -1,0 +1,223 @@
+{
+  "tech_stack": [
+    "TypeScript",
+    "NestJS",
+    "Prisma",
+    "PostgreSQL"
+  ],
+  "features": [
+    {
+      "name": "Auth API",
+      "description": "User authentication endpoints for signup and login.",
+      "files": [
+        "apps/api/src/auth/auth.controller.ts",
+        "apps/api/src/auth/auth.service.ts"
+      ],
+      "api_doc": {
+        "openapi": "3.0.0",
+        "paths": {
+          "/auth/signup": {
+            "post": {
+              "summary": "Register a new user",
+              "requestBody": {
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "email": { "type": "string" },
+                        "username": { "type": "string" },
+                        "password": { "type": "string" },
+                        "name": { "type": "string" }
+                      }
+                    }
+                  }
+                }
+              },
+              "responses": {
+                  "201": { "description": "User created" },
+                  "409": { "description": "Conflict: Email or Username already exists" }
+              }
+            }
+          },
+          "/auth/login": {
+            "post": {
+              "summary": "Login user",
+              "requestBody": {
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "email": { "type": "string" },
+                        "password": { "type": "string" }
+                      }
+                    }
+                  }
+                }
+              },
+              "responses": {
+                  "201": { "description": "Login successful, returns token" },
+                  "401": { "description": "Unauthorized" }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Users API",
+      "description": "User profile management and social interactions.",
+      "files": [
+        "apps/api/src/users/users.controller.ts",
+        "apps/api/src/users/users.service.ts"
+      ],
+      "api_doc": {
+        "openapi": "3.0.0",
+        "paths": {
+            "/users/{username}": {
+                "get": { 
+                    "summary": "Get user profile",
+                    "parameters": [
+                        { "name": "username", "in": "path", "required": true, "schema": { "type": "string" } }
+                    ],
+                    "responses": {
+                        "200": { "description": "User profile with isFollowing status" },
+                        "404": { "description": "User not found" }
+                    }
+                }
+            },
+            "/users/profile": {
+                "patch": { 
+                    "summary": "Update user profile",
+                    "requestBody": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "name": { "type": "string" },
+                                        "bio": { "type": "string" },
+                                        "location": { "type": "string" },
+                                        "website": { "type": "string" },
+                                        "avatar": { "type": "string" },
+                                        "coverImage": { "type": "string" }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "/users/{id}/follow": {
+                "post": { "summary": "Follow user" },
+                "delete": { "summary": "Unfollow user" }
+            }
+        }
+      }
+    },
+    {
+      "name": "Tweets API",
+      "description": "Tweet creation, retrieval, and interactions.",
+      "files": [
+        "apps/api/src/tweets/tweets.controller.ts",
+        "apps/api/src/tweets/tweets.service.ts"
+      ],
+      "api_doc": {
+        "openapi": "3.0.0",
+        "paths": {
+            "/tweets": {
+                "get": { 
+                    "summary": "Get all tweets",
+                    "parameters": [
+                        { "name": "authorId", "in": "query", "schema": { "type": "string" } },
+                        { "name": "excludeReplies", "in": "query", "schema": { "type": "boolean" } }
+                    ]
+                },
+                "post": { 
+                    "summary": "Create tweet",
+                    "requestBody": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "content": { "type": "string" },
+                                        "image": { "type": "string" },
+                                        "parentId": { "type": "string" }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "/tweets/{id}/like": {
+                "post": { "summary": "Like tweet" },
+                "delete": { "summary": "Unlike tweet" }
+            }
+        }
+      }
+    },
+    {
+        "name": "Notifications API",
+        "description": "Notification retrieval and management.",
+        "files": [
+            "apps/api/src/notifications/notifications.controller.ts",
+            "apps/api/src/notifications/notifications.service.ts"
+        ],
+        "api_doc": {
+            "openapi": "3.0.0",
+            "paths": {
+                "/notifications": {
+                    "get": { "summary": "Get user notifications" }
+                },
+                "/notifications/{id}/read": {
+                    "patch": { "summary": "Mark notification as read" }
+                }
+            }
+        }
+    },
+    {
+        "name": "Conversations API",
+        "description": "Direct messaging.",
+        "files": [
+            "apps/api/src/conversations/conversations.controller.ts",
+            "apps/api/src/conversations/conversations.service.ts"
+        ],
+        "api_doc": {
+            "openapi": "3.0.0",
+            "paths": {
+                "/conversations": {
+                    "get": { "summary": "List conversations" },
+                    "post": { "summary": "Create/Get conversation" }
+                },
+                "/conversations/{id}/messages": {
+                    "get": { "summary": "Get messages" },
+                    "post": { "summary": "Send message" }
+                }
+            }
+        }
+    },
+    {
+        "name": "Uploads API",
+        "description": "File upload handling.",
+        "files": [
+            "apps/api/src/uploads/uploads.controller.ts"
+        ],
+        "api_doc": {
+            "openapi": "3.0.0",
+            "paths": {
+                "/uploads": {
+                    "post": { 
+                        "summary": "Upload file",
+                        "responses": {
+                            "201": { "description": "File uploaded", "content": { "application/json": { "schema": { "properties": { "url": { "type": "string" } } } } } }
+                        }
+                    }
+                }
+            }
+        }
+    }
+  ]
+}

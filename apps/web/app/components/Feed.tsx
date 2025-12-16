@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import { Tweet } from './Tweet';
 import { Image, FileText, AlignLeft, Smile, Calendar, MapPin } from 'lucide-react';
-import styles from './Feed.module.css';
 import api from '../lib/api';
 
 interface TweetData {
@@ -15,6 +15,8 @@ interface TweetData {
     username: string;
     avatar?: string;
   };
+  retweets: number;
+  views: number;
   _count: {
     likes: number;
     children: number;
@@ -22,7 +24,12 @@ interface TweetData {
   isLiked?: boolean;
 }
 
-export function Feed() {
+interface FeedProps {
+  type?: 'all' | 'following';
+}
+
+export function Feed({ type = 'all' }: FeedProps) {
+  const router = useRouter();
   const [tweets, setTweets] = useState<TweetData[]>([]);
   const [newTweetContent, setNewTweetContent] = useState('');
   const [imageUrl, setImageUrl] = useState<string | null>(null);
@@ -51,8 +58,10 @@ export function Feed() {
   };
 
   const fetchTweets = async () => {
+    setIsLoading(true);
     try {
-      const response = await api.get('/tweets');
+      const endpoint = type === 'following' ? '/tweets?following=true' : '/tweets';
+      const response = await api.get(endpoint);
       setTweets(response.data);
     } catch (error) {
       console.error('Failed to fetch tweets:', error);
@@ -73,7 +82,7 @@ export function Feed() {
   useEffect(() => {
     fetchTweets();
     fetchUser();
-  }, []);
+  }, [type]);
 
   const handlePostTweet = async () => {
     if (!newTweetContent.trim() && !imageUrl) return;
@@ -85,100 +94,83 @@ export function Feed() {
       setNewTweetContent('');
       setImageUrl(null);
       if (fileInputRef.current) fileInputRef.current.value = '';
-      fetchTweets(); // Refresh feed
+      fetchTweets(); 
     } catch (error) {
       console.error('Failed to post tweet:', error);
     }
   };
 
   return (
-    <div className={styles.feed}>
-      <div className={styles.header}>
-        <div className={styles.tabs}>
-          <div className={`${styles.tab} ${styles.activeTab}`}>
-            <span>For you</span>
-            <div className={styles.indicator}></div>
+    <div className="flex w-full min-h-screen flex-col border-r border-gray-800 pb-20">
+      <div className="sticky top-0 z-10 flex w-full border-b border-gray-800 bg-black/80 backdrop-blur-md">
+        <div className="flex w-full">
+          <div 
+            onClick={() => router.push('/main')}
+            className={`flex flex-1 cursor-pointer flex-col items-center justify-center p-4 hover:bg-gray-900 transition relative ${type === 'all' ? 'text-white' : 'text-gray-500 hover:text-white'}`}
+          >
+            <span className={type === 'all' ? "font-bold" : "font-medium"}>For you</span>
+            {type === 'all' && <div className="absolute bottom-0 h-1 w-14 rounded-full bg-blue-500"></div>}
           </div>
-          <div className={styles.tab}>
-            <span>Following</span>
+          <div 
+            onClick={() => router.push('/following')}
+            className={`flex flex-1 cursor-pointer flex-col items-center justify-center p-4 hover:bg-gray-900 transition relative ${type === 'following' ? 'text-white' : 'text-gray-500 hover:text-white'}`}
+          >
+            <span className={type === 'following' ? "font-bold" : "font-medium"}>Following</span>
+            {type === 'following' && <div className="absolute bottom-0 h-1 w-14 rounded-full bg-blue-500"></div>}
           </div>
         </div>
       </div>
       
-      <div className={styles.compose}>
-        <div className={styles.avatar}></div>
-        <div className={styles.inputWrapper}>
+      <div className="flex w-full gap-4 border-b border-gray-800 p-4">
+        <div className="h-10 w-10 min-w-[40px] rounded-full bg-gray-700 bg-cover bg-center" style={{ backgroundImage: currentUser?.avatar ? `url(${currentUser.avatar})` : undefined }}></div>
+        <div className="flex flex-1 flex-col gap-4">
           <input 
             type="text" 
             placeholder="What is happening?!" 
-            className={styles.input}
+            className="w-full bg-transparent text-xl text-white outline-none placeholder:text-gray-500"
             value={newTweetContent}
             onChange={(e) => setNewTweetContent(e.target.value)}
           />
           {imageUrl && (
-            <div style={{ marginTop: 10, position: 'relative', display: 'inline-block' }}>
-              <img src={imageUrl} alt="Upload preview" style={{ maxWidth: '100%', maxHeight: 300, borderRadius: 16 }} />
+            <div className="relative mt-2 inline-block">
+              <img src={imageUrl} alt="Upload preview" className="max-h-[300px] max-w-full rounded-2xl" />
               <button 
                 onClick={() => setImageUrl(null)}
-                style={{
-                  position: 'absolute',
-                  top: 8,
-                  right: 8,
-                  background: 'rgba(0,0,0,0.5)',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '50%',
-                  width: 24,
-                  height: 24,
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}
+                className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-black/50 text-white hover:bg-black/70 backdrop-blur-sm"
               >
                 ×
               </button>
             </div>
           )}
-          <div className={styles.composeTools}>
-            <div className={styles.toolIcons}>
+          <div className="flex items-center justify-between border-t border-gray-800 pt-3">
+            <div className="flex gap-1 text-blue-500">
               <input
                 type="file"
                 ref={fileInputRef}
-                style={{ display: 'none' }}
+                className="hidden"
                 accept="image/*"
                 onChange={handleFileChange}
               />
-              <button 
-                className={styles.toolButton} 
-                aria-label="Media"
-                onClick={() => fileInputRef.current?.click()}
-              >
-                <Image size={20} />
-              </button>
-              <button className={styles.toolButton} aria-label="GIF">
-                <FileText size={20} />
-              </button>
-              <button className={styles.toolButton} aria-label="Poll">
-                <AlignLeft size={20} />
-              </button>
-              <button className={styles.toolButton} aria-label="Emoji">
-                <Smile size={20} />
-              </button>
-              <button className={styles.toolButton} aria-label="Schedule">
-                <Calendar size={20} />
-              </button>
-              <button className={styles.toolButton} aria-label="Location">
-                <MapPin size={20} />
-              </button>
+              <ToolButton icon={Image} onClick={() => fileInputRef.current?.click()} />
+              <ToolButton icon={FileText} />
+              <ToolButton icon={AlignLeft} />
+              <ToolButton icon={Smile} />
+              <ToolButton icon={Calendar} />
+              <ToolButton icon={MapPin} />
             </div>
-            <button className={styles.postButton} onClick={handlePostTweet}>Post</button>
+            <button 
+              className={`rounded-full px-5 py-2 font-bold text-white transition ${!newTweetContent.trim() && !imageUrl ? 'bg-blue-500/50 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'}`} 
+              onClick={handlePostTweet}
+              disabled={!newTweetContent.trim() && !imageUrl}
+            >
+              Post
+            </button>
           </div>
         </div>
       </div>
 
       {isLoading ? (
-        <div style={{ padding: 20, textAlign: 'center', color: 'white' }}>Loading...</div>
+        <div className="p-10 text-center text-gray-500">Loading...</div>
       ) : (
         tweets.map((tweet) => (
           <Tweet 
@@ -192,9 +184,9 @@ export function Feed() {
             content={tweet.content} 
             image={tweet.image}
             likes={tweet._count.likes} 
-            retweets={0} // Not implemented yet
+            retweets={tweet.retweets} 
             replies={tweet._count.children} 
-            views={0} // Not implemented yet
+            views={tweet.views}
             currentUser={currentUser}
             onDelete={() => fetchTweets()}
             isLiked={tweet.isLiked}
@@ -202,5 +194,13 @@ export function Feed() {
         ))
       )}
     </div>
+  );
+}
+
+function ToolButton({ icon: Icon, onClick }: { icon: any; onClick?: () => void }) {
+  return (
+    <button className="rounded-full p-2.5 hover:bg-blue-500/10 transition" onClick={onClick}>
+      <Icon size={20} />
+    </button>
   );
 }

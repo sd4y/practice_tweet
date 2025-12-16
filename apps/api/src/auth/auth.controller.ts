@@ -3,9 +3,14 @@ import { AuthService } from './auth.service';
 import { Prisma } from '@repo/database';
 import { AuthGuard } from '@nestjs/passport';
 
+import { UsersService } from '../users/users.service';
+
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly usersService: UsersService
+  ) {}
 
   @Post('signup')
   async signup(@Body() userData: Prisma.UserCreateInput) {
@@ -23,7 +28,12 @@ export class AuthController {
 
   @UseGuards(AuthGuard('jwt'))
   @Get('profile')
-  getProfile(@Request() req: any) {
-    return req.user;
+  async getProfile(@Request() req: any) {
+    const user = await this.usersService.findById(req.user.userId);
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
+    const { password, ...result } = user;
+    return result;
   }
 }

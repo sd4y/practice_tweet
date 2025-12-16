@@ -1,0 +1,52 @@
+[
+  {
+    "id": "TC001",
+    "title": "signup rejects duplicate email or username",
+    "description": "Test the /auth/signup endpoint to ensure it rejects registration attempts with duplicate email or username, returning a 409 Conflict error."
+  },
+  {
+    "id": "TC002",
+    "title": "login returns valid jwt and user info on success",
+    "description": "Test the /auth/login endpoint to verify it returns a valid JWT token and user information upon successful login, and returns 401 Unauthorized on failure."
+  },
+  {
+    "id": "TC003",
+    "title": "get user profile returns accurate data and handles case insensitivity",
+    "description": "Test the /users/{username} GET endpoint to ensure it returns the correct user profile data including isFollowing status, handles case insensitivity in username, and returns 404 if user not found."
+  },
+  {
+    "id": "TC004",
+    "title": "update user profile applies partial and full updates correctly",
+    "description": "Test the /users/profile PATCH endpoint to verify that partial and full updates to user profile fields (name, bio, location, website, avatar, coverImage) are applied correctly and are idempotent."
+  },
+  {
+    "id": "TC005",
+    "title": "follow user updates social graph and prevents invalid operations",
+    "description": "Test the /users/{id}/follow POST endpoint to confirm that following a user updates follower and following counts correctly and prevents invalid operations such as following oneself."
+  },
+  {
+    "id": "TC006",
+    "title": "unfollow user updates social graph correctly",
+    "description": "Test the /users/{id}/follow DELETE endpoint to ensure unfollowing a user updates follower and following counts correctly."
+  },
+  {
+    "id": "TC007",
+    "title": "create tweet supports text images and replies",
+    "description": "Test the /tweets POST endpoint to verify tweet creation supports text content, optional images, and replies via parentId, and returns correct relationship data."
+  },
+  {
+    "id": "TC008",
+    "title": "get tweets filters by authorid and exclude replies",
+    "description": "Test the /tweets GET endpoint to ensure it correctly filters tweets by authorId and excludes replies when excludeReplies parameter is true."
+  },
+  {
+    "id": "TC009",
+    "title": "like and unlike tweet updates counts and authorization",
+    "description": "Test the /tweets/{id}/like POST and DELETE endpoints to verify liking and unliking tweets updates like counts correctly and enforces proper authorization."
+  },
+  {
+    "id": "TC010",
+    "title": "upload file accepts valid images and returns accessible url",
+    "description": "Test the /uploads POST endpoint to confirm it accepts valid image files, uploads them successfully, and returns accessible URLs in the response."
+  }
+]

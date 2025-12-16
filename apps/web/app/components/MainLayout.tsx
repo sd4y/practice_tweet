@@ -1,7 +1,8 @@
+'use client';
+
 import React, { useEffect, useState } from 'react';
 import { Sidebar } from './Sidebar';
 import { RightSection } from './RightSection';
-import styles from './MainLayout.module.css';
 import api from '../lib/api';
 
 export function MainLayout({ children }: { children: React.ReactNode }) {
@@ -19,20 +20,12 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
     fetchUser();
   }, []);
 
-  // Clone children to pass currentUser if they are valid React elements
-  const childrenWithProps = React.Children.map(children, child => {
-    if (React.isValidElement(child)) {
-      return React.cloneElement(child, { currentUser } as any);
-    }
-    return child;
-  });
-
   return (
-    <div className={styles.container}>
-      <div className={styles.wrapper}>
+    <div className="flex min-h-screen justify-center bg-black text-white">
+      <div className="flex w-full max-w-[1265px] xl:px-8">
         <Sidebar currentUser={currentUser} />
-        <main className={styles.main}>
-          {childrenWithProps}
+        <main className="flex max-w-[600px] w-full flex-grow flex-col border-x border-gray-800">
+          {children}
         </main>
         <RightSection />
       </div>
