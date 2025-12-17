@@ -27,6 +27,7 @@
     "@nestjs/passport": "^11.0.5",
     "@nestjs/platform-express": "^11.0.1",
     "@nestjs/serve-static": "^5.0.4",
+    "@prisma/client": "^5.22.0",
     "@repo/database": "workspace:*",
     "@types/bcrypt": "^6.0.0",
     "@types/passport-jwt": "^4.0.1",
