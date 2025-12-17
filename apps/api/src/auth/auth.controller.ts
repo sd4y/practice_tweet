@@ -14,15 +14,19 @@ export class AuthController {
 
   @Post('signup')
   async signup(@Body() userData: Prisma.UserCreateInput) {
+    console.log('[AuthController] Signup request received:', { ...userData, password: '***' });
     return this.authService.register(userData);
   }
 
   @Post('login')
   async login(@Body() req: any) {
+    console.log('[AuthController] Login request received for email:', req.email);
     const user = await this.authService.validateUser(req.email, req.password);
     if (!user) {
+      console.log('[AuthController] Login failed: Invalid credentials');
       throw new UnauthorizedException('Invalid credentials');
     }
+    console.log('[AuthController] Login successful, generating token for:', user.id);
     return this.authService.login(user);
   }
 

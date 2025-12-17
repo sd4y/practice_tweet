@@ -18,11 +18,18 @@ export default function SignupPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    e.stopPropagation(); // Prevent event bubbling
+    console.log('Signup form submitted');
     try {
+      console.log('Sending signup request...', formData);
       await api.post('/auth/signup', formData);
-      router.push('/');
+      console.log('Signup success, redirecting...');
+      // router.push('/'); // DISABLED FOR DEBUGGING
+      alert('Signup request finished. Check console logs.');
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Signup failed');
+      console.error('Signup Error Check:', err);
+      const errorMessage = err.response?.data?.message || err.message || 'Signup failed';
+      setError(errorMessage);
     }
   };
 

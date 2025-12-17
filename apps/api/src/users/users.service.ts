@@ -8,19 +8,25 @@ export class UsersService {
   constructor(private prisma: PrismaService) {}
 
   async create(data: Prisma.UserCreateInput): Promise<User> {
+    console.log('[UsersService] Creating user in DB:', data.email);
     const hashedPassword = await bcrypt.hash(data.password, 10);
-    return this.prisma.user.create({
+    const user = await this.prisma.user.create({
       data: {
         ...data,
         password: hashedPassword,
       },
     });
+    console.log('[UsersService] User created in DB with ID:', user.id);
+    return user;
   }
 
   async findOne(email: string): Promise<User | null> {
-    return this.prisma.user.findUnique({
+    console.log('[UsersService] Finding user by email:', email);
+    const user = await this.prisma.user.findUnique({
       where: { email },
     });
+    console.log('[UsersService] FindOne result:', user ? 'User found' : 'User not found');
+    return user;
   }
 
   async findById(id: string): Promise<User | null> {

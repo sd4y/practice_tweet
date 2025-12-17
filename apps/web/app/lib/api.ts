@@ -1,10 +1,11 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://127.0.0.1:3001',
+  baseURL: 'http://3.35.10.193:3001',
 });
 
 api.interceptors.request.use((config) => {
+  console.log(`[API Request] ${config.method?.toUpperCase()} ${config.url}`, config.data);
   const token = localStorage.getItem('token');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
@@ -13,19 +14,21 @@ api.interceptors.request.use((config) => {
 });
 
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    console.log(`[API Response Success] ${response.config.url}`, response.status, response.data);
+    return response;
+  },
   (error) => {
-    // Check for 401 Unauthorized OR Network Error (server down/unreachable)
-    // error.response is undefined for network errors like Connection Refused
-    if (error.response?.status === 401 || !error.response) {
-      localStorage.removeItem('token');
-      // Only redirect if we are not already on the landing page or login page to avoid loops
-      if (typeof window !== 'undefined' && window.location.pathname !== '/') {
-         window.location.href = '/';
-      }
-    }
+    // NO REDIRECT - just log and reject for debugging
+    console.error('[API Response Error]', {
+      url: error.config?.url,
+      status: error.response?.status,
+      data: error.response?.data,
+      message: error.message
+    });
     return Promise.reject(error);
   }
 );
 
 export default api;
+
