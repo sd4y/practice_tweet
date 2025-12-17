@@ -1,4 +1,6 @@
 import { Module } from '@nestjs/common';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
@@ -8,8 +10,6 @@ import { TweetsModule } from './tweets/tweets.module';
 import { UploadsModule } from './uploads/uploads.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { ConversationsModule } from './conversations/conversations.module';
-import { ServeStaticModule } from '@nestjs/serve-static';
-import { join } from 'path';
 
 @Module({
   imports: [
@@ -18,12 +18,12 @@ import { join } from 'path';
       serveRoot: '/uploads',
     }),
     PrismaModule,
-    AuthModule, 
+    AuthModule,
     UsersModule,
     TweetsModule,
     UploadsModule,
     NotificationsModule,
-    ConversationsModule
+    ConversationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

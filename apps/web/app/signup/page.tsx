@@ -24,8 +24,7 @@ export default function SignupPage() {
       console.log('Sending signup request...', formData);
       await api.post('/auth/signup', formData);
       console.log('Signup success, redirecting...');
-      // router.push('/'); // DISABLED FOR DEBUGGING
-      alert('Signup request finished. Check console logs.');
+      router.push('/');
     } catch (err: any) {
       console.error('Signup Error Check:', err);
       const errorMessage = err.response?.data?.message || err.message || 'Signup failed';

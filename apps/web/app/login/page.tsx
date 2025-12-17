@@ -23,8 +23,7 @@ export default function LoginPage() {
       const res = await api.post('/auth/login', formData);
       console.log('Login success', res.data);
       localStorage.setItem('token', res.data.access_token);
-      // window.location.href = '/main'; // Full reload to update auth state // DISABLED FOR DEBUGGING
-      alert('Login request finished. Check console logs.');
+      window.location.href = '/main'; // Full reload to update auth state
     } catch (err: any) {
       console.error('Login Error Check:', err);
       setError(err.response?.data?.message || 'Login failed');

@@ -32,20 +32,24 @@ export class TweetsController {
   }
 
   @Get()
-  findAll(@Headers('authorization') authHeader?: string, @Query('authorId') authorId?: string, @Query('excludeReplies') excludeReplies?: string, @Query('following') following?: string) {
+  findAll(@Headers('authorization') authHeader?: string, @Query('authorId') authorId?: string, @Query('excludeReplies') excludeReplies?: string, @Query('following') following?: string, @Query('page') page?: string, @Query('limit') limit?: string) {
     let userId: string | undefined;
     if (authHeader) {
       try {
         const token = authHeader.split(' ')[1];
         const decoded: any = this.jwtService.decode(token);
-        if (decoded?.userId) {
+        if (decoded?.sub) {
+          userId = decoded.sub;
+        } else if (decoded?.userId) {
           userId = decoded.userId;
         }
       } catch (e) {
         // ignore invalid tokens
       }
     }
-    return this.tweetsService.findAll(userId, authorId, excludeReplies === 'true', following === 'true');
+    const pageNum = page ? parseInt(page) : 1;
+    const limitNum = limit ? parseInt(limit) : 3;
+    return this.tweetsService.findAll(userId, authorId, excludeReplies === 'true', following === 'true', pageNum, limitNum);
   }
 
   @Get(':id')
@@ -55,7 +59,9 @@ export class TweetsController {
       try {
         const token = authHeader.split(' ')[1];
         const decoded: any = this.jwtService.decode(token);
-        if (decoded?.userId) {
+        if (decoded?.sub) {
+          userId = decoded.sub;
+        } else if (decoded?.userId) {
           userId = decoded.userId;
         }
       } catch (e) {

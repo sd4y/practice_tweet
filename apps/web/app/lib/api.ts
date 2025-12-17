@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://3.35.10.193:3001',
+  baseURL: 'http://localhost:3001',
 });
 
 api.interceptors.request.use((config) => {
@@ -26,6 +26,14 @@ api.interceptors.response.use(
       data: error.response?.data,
       message: error.message
     });
+
+    if (error.response?.status === 401) {
+      localStorage.removeItem('token');
+      // Redirect to landing page
+      if (typeof window !== 'undefined') {
+        window.location.href = '/';
+      }
+    }
     return Promise.reject(error);
   }
 );

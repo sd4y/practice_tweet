@@ -37,6 +37,10 @@ export function Feed({ type = 'all' }: FeedProps) {
   const [isLoading, setIsLoading] = useState(true);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -57,16 +61,34 @@ export function Feed({ type = 'all' }: FeedProps) {
     }
   };
 
-  const fetchTweets = async () => {
-    setIsLoading(true);
+  const fetchTweets = async (pageNum: number = 1) => {
+    if (pageNum === 1) setIsLoading(true);
+    else setLoadingMore(true);
+
     try {
       const endpoint = type === 'following' ? '/tweets?following=true' : '/tweets';
-      const response = await api.get(endpoint);
-      setTweets(response.data);
+      // Append pagination params
+      const url = `${endpoint}${endpoint.includes('?') ? '&' : '?'}page=${pageNum}&limit=3`;
+      
+      const response = await api.get(url);
+      const newTweets = response.data;
+      
+      if (newTweets.length < 3) {
+        setHasMore(false);
+      } else {
+        setHasMore(true);
+      }
+
+      if (pageNum === 1) {
+        setTweets(newTweets);
+      } else {
+        setTweets(prev => [...prev, ...newTweets]);
+      }
     } catch (error) {
       console.error('Failed to fetch tweets:', error);
     } finally {
       setIsLoading(false);
+      setLoadingMore(false);
     }
   };
 
@@ -80,9 +102,18 @@ export function Feed({ type = 'all' }: FeedProps) {
   };
 
   useEffect(() => {
-    fetchTweets();
+    setPage(1);
+    setHasMore(true);
+    setTweets([]);
+    fetchTweets(1);
     fetchUser();
   }, [type]);
+
+  const handleLoadMore = () => {
+    const nextPage = page + 1;
+    setPage(nextPage);
+    fetchTweets(nextPage);
+  };
 
   const handlePostTweet = async () => {
     if (!newTweetContent.trim() && !imageUrl) return;
@@ -94,7 +125,8 @@ export function Feed({ type = 'all' }: FeedProps) {
       setNewTweetContent('');
       setImageUrl(null);
       if (fileInputRef.current) fileInputRef.current.value = '';
-      fetchTweets(); 
+      setPage(1);
+      fetchTweets(1); 
     } catch (error) {
       console.error('Failed to post tweet:', error);
     }
@@ -172,26 +204,39 @@ export function Feed({ type = 'all' }: FeedProps) {
       {isLoading ? (
         <div className="p-10 text-center text-gray-500">Loading...</div>
       ) : (
-        tweets.map((tweet) => (
-          <Tweet 
-            key={tweet.id}
-            id={tweet.id}
-            authorName={tweet.author.name || 'Unknown'} 
-            authorHandle={tweet.author.username || 'unknown'} 
-            authorAvatar={tweet.author.avatar}
-            authorId={tweet.author.id}
-            time={new Date(tweet.createdAt).toLocaleDateString()} 
-            content={tweet.content} 
-            image={tweet.image}
-            likes={tweet._count.likes} 
-            retweets={tweet.retweets} 
-            replies={tweet._count.children} 
-            views={tweet.views}
-            currentUser={currentUser}
-            onDelete={() => fetchTweets()}
-            isLiked={tweet.isLiked}
-          />
-        ))
+        <>
+          {tweets.map((tweet) => (
+            <Tweet 
+              key={tweet.id}
+              id={tweet.id}
+              authorName={tweet.author.name || 'Unknown'} 
+              authorHandle={tweet.author.username || 'unknown'} 
+              authorAvatar={tweet.author.avatar}
+              authorId={tweet.author.id}
+              time={new Date(tweet.createdAt).toLocaleDateString()} 
+              content={tweet.content} 
+              image={tweet.image}
+              likes={tweet._count.likes} 
+              retweets={tweet.retweets} 
+              replies={tweet._count.children} 
+              views={tweet.views}
+              currentUser={currentUser}
+              onDelete={() => fetchTweets(1)}
+              isLiked={tweet.isLiked}
+            />
+          ))}
+          {hasMore && tweets.length > 0 && (
+             <div className="flex justify-center p-6 border-b border-gray-800">
+               <button 
+                 onClick={handleLoadMore}
+                 disabled={loadingMore}
+                 className="text-blue-500 hover:bg-blue-500/10 px-4 py-2 rounded-full transition disabled:opacity-50"
+               >
+                 {loadingMore ? 'Loading...' : 'Load More'}
+               </button>
+             </div>
+          )}
+        </>
       )}
     </div>
   );

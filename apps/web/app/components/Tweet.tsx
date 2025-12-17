@@ -136,7 +136,7 @@ export function Tweet({
     }
   };
 
-  const isOwner = currentUser?.userId === authorId;
+  const isOwner = currentUser?.id === authorId;
 
   const handleDelete = async (e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
@@ -195,7 +195,7 @@ export function Tweet({
         {isEditing ? (
           <div className="mt-2 flex flex-col gap-2">
             <textarea 
-              className="w-full rounded p-2 text-black" 
+              className="w-full rounded p-2 bg-gray-900 text-white border border-gray-700 focus:border-blue-500 outline-none" 
               value={editContent} 
               onChange={(e) => setEditContent(e.target.value)} 
             />

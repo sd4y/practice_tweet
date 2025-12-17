@@ -82,7 +82,7 @@ export class TweetsService {
     }
   }
 
-  async findAll(userId?: string, authorId?: string, excludeReplies: boolean = false, onlyFollowing: boolean = false) {
+  async findAll(userId?: string, authorId?: string, excludeReplies: boolean = false, onlyFollowing: boolean = false, page: number = 1, limit: number = 3) {
     let whereClause: Prisma.TweetWhereInput = {
       AND: [
         authorId ? { authorId } : {},
@@ -108,6 +108,8 @@ export class TweetsService {
 
     const tweets = await this.prisma.tweet.findMany({
       where: whereClause,
+      take: limit,
+      skip: (page - 1) * limit,
       orderBy: {
         createdAt: 'desc',
       },
